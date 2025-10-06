@@ -1,0 +1,53 @@
+#include <SFML/Graphics.hpp>
+#include "../../logic/card/card.h"
+
+#define CARD_SPRITE_HEIGHT 96
+#define CARD_SPRITE_WIDTH 70
+#define CARD_ATLAS_SPACING 1
+#define OUT_OF_BOUNDS -1000
+
+#pragma once
+class cardRenderer
+{
+	sf::Texture cardPlaceholder;
+
+	sf::Sprite _material;
+	sf::Sprite _frontImage;
+	card* _card;
+	bool _isRendering;
+public:
+	cardRenderer();
+	cardRenderer(sf::Texture&, card*);
+	cardRenderer(sf::Texture&, card*, sf::Vector2f, sf::Angle, sf::Vector2f);
+	cardRenderer(sf::Texture&, card*, float, sf::Angle, sf::Vector2f);
+	cardRenderer(const cardRenderer&);
+
+	void setCardAtlas(sf::Texture&);
+	void setCard(card*);
+	void setScale(sf::Vector2f);
+	void setScale(float);
+	void setPosition(sf::Vector2f);
+	void move(sf::Vector2f);
+	void setRotation(sf::Angle);
+	void setOrigin(sf::Vector2f);
+	void setColor(sf::Color);
+	void resetColor();
+
+	sf::Vector2f getScale() const;
+	bool isRendering() const;
+	sf::Vector2f getPosition() const;
+	sf::FloatRect getLocalBounds() const;
+	sf::FloatRect getGlobalBounds() const;
+	sf::Angle getRotation() const;
+
+	void draw(sf::RenderTarget&);
+	void updateVisual();
+	void assign(const cardRenderer&);
+private:
+	void setOriginToLocalCentre();
+	void setOriginToGlobalCentre();
+};
+
+sf::IntRect recalculateCordsToIntRect(unsigned, unsigned);
+
+sf::IntRect recalculateCardToIntRect(card);

@@ -1,0 +1,12 @@
+#pragma once
+
+#define RESOLUTION_MULTIPLIER 80
+#define RESOLUTION_HEIGHT 10
+#define RESOLUTION_WIDTH 15
+
+const unsigned WINDOW_HEIGHT = RESOLUTION_MULTIPLIER * RESOLUTION_HEIGHT;
+const unsigned WINDOW_WIDTH = RESOLUTION_MULTIPLIER * RESOLUTION_WIDTH;
+
+#define POKER_GREEN sf::Color(0, 128, 0)
+
+const char* GAME_TITLE = "Wonderful Gambling Paradise";
