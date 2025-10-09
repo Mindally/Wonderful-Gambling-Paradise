@@ -199,7 +199,7 @@ template<class T> T* TVector<T>::data() const noexcept {
 }
 
 template<class T> int TVector<T>::size() const noexcept {
-    return _size - _deleted;
+    return static_cast<int>(_size - _deleted);
 }
 
 template<class T> int TVector<T>::capacity() const noexcept {

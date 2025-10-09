@@ -2,185 +2,234 @@
 
 // Самую верхнюю карту будем хранить в конце массива
 
-deck::deck() {
-	_top_index = 51;
-	int i = 0;
-	for (int suit = Spades; suit >= Clubs; suit--) {
-		for (int rank = R2; rank <= RA; rank++) {
-			_deck.push_back(card(suit, rank, FaceDown));
-			i++;
+namespace WGP {
+	deck::deck() {
+		_topIndex = 51;
+		int i = 0;
+		for (int suit = 0; suit < 4; suit++) {
+			for (int rank = static_cast<int>(CardRank::R2); rank <= static_cast<int>(CardRank::RA); rank++) {
+				_deck.push_back(card(static_cast<CardSuit>(suit), static_cast<CardRank>(rank), CardState::FaceDown));
+				i++;
+			}
 		}
+		_deck.shrink_to_fit();
 	}
-	_deck.shrink_to_fit();
-}
 
-deck::deck(int size) {
-	if (size < 1) throw std::invalid_argument("deck: Invalid argument 'size' - must be > 0");
-	_top_index = -1;
-	for (int i = 0; i < size; i++) _deck.push_back(card());
-	_deck.shrink_to_fit();
-}
-
-deck::deck(int size, const card* data) {
-	if (size < 1) throw std::invalid_argument("deck: Invalid argument 'size' - must be > 0");
-	if (data == nullptr) throw std::invalid_argument("deck: Invalid argument 'data' - nullptr is passed");
-	_top_index = size - 1;
-	int index = 0;
-	for (int i = size - 1; i >= 0; i--) {
-		_deck.push_back(data[index]);
-		index++;
+	deck::deck(int size) {
+		if (size < 1) throw std::invalid_argument("deck: Invalid argument 'size' - must be > 0");
+		_topIndex = -1;
+		for (int i = 0; i < size; i++) _deck.push_back(card());
+		_deck.shrink_to_fit();
 	}
-	_deck.shrink_to_fit();
-}
 
-deck::deck(std::initializer_list<card> data) {
-	if (data.size() < 1) throw std::invalid_argument("deck: Invalid argument 'data.size()' - must be > 0");
-	_top_index = data.size() - 1;
-	auto it = data.begin();
-	for (int i = _top_index; i >= 0; i--) {
-		_deck.push_back(*it);
-		it++;
-	}
-	_deck.shrink_to_fit();
-}
-
-deck::deck(std::initializer_list<const char*> data) {
-	if (data.size() < 1) throw std::invalid_argument("deck: Invalid argument 'data.size()' - must be > 0");
-	_top_index = data.size() - 1;
-	auto it = data.begin();
-	for (int i = _top_index; i >= 0; i--) {
-		_deck.push_back(card(*it));
-		it++;
-	}
-	_deck.shrink_to_fit();
-}
-
-deck::deck(const deck& other) {
-	_top_index = other._top_index;
-	_deck = other._deck;
-}
-
-deck::deck(const deck& source, int from_index, int to_index) {
-	if (from_index < 0 || from_index > source.size() - 1) throw std::invalid_argument("deck: Invalid argument 'from_index' - must be >= 0 and < size of source");
-	if (to_index < 0 || to_index > source.size() - 1) throw std::invalid_argument("deck: Invalid argument 'to_index' - must be >= 0 and < size of source");
-	if (from_index > to_index) throw std::invalid_argument("deck: Invalid argument 'from_index' & 'to_index' - from_index cannot be greater than to_index");
-	_top_index = size() - 1;
-	for (int i = from_index; i < to_index + 1; i++) {
-		_deck.push_back(source._deck[i]);
-	}
-	_deck.shrink_to_fit();
-}
-
-void deck::shuffle() {
-	vectorShuffle(_deck);
-}
-
-void deck::shuffle(std::mt19937& gen) {
-	vectorShuffle(_deck, gen);
-}
-
-void deck::print() {
-	for (int i = size() - 1; i >= 0; i--) {
-		_deck[i].print();
-		std::cout << " ";
-	}
-}
-
-bool deck::is_empty() {
-	if (_top_index == -1) return true;
-	else return false;
-}
-
-bool deck::is_full() {
-	if (_top_index == size() - 1) return true;
-	else return false;
-}
-
-void deck::append(card card) {
-	if (card.state() == Blank) throw std::logic_error("deck.append: unable to append a card - card state is Blank");
-	if (is_full()) throw std::out_of_range("deck.append: unable to append - deck is full");
-	_top_index++;
-	_deck[_top_index] = card;
-}
-
-void deck::append(card* cards, int len) {
-	if (_top_index + len > size() - 1) throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
-	for (int i = 1; i < len + 1; i++) {
-		_deck[_top_index + i] = cards[i - 1];
-	}
-	_top_index += len;
-}
-
-void deck::append(const deck& other) {
-	if (_top_index + other.size() > size() - 1) throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
-	for (int i = 1; i < other.size() + 1; i++) {
-		_deck[_top_index + i] = other._deck[i - 1];
-	}
-	_top_index += other.size();
-}
-
-void deck::erase() {
-	if (is_empty()) throw std::logic_error("deck.erase: unable to erase - deck is empty");
-	_deck[_top_index].set_state(Blank);
-	_top_index--;
-}
-
-void deck::clear() {
-	if (!is_empty()) for (int i = _top_index; i >= 0; i--) erase();
-}
-
-void deck::assign(const deck& other, Direction dir) {
-	this->resize(other.size());
-	if (dir == Forward) {
-		for (int i = 0; i < other.size(); i++) this->_deck[i] = other._deck[i];
-		this->_top_index = other._top_index;
-	}
-	else {
+	deck::deck(int size, const card* data) {
+		if (size < 1) throw std::invalid_argument("deck: Invalid argument 'size' - must be > 0");
+		if (data == nullptr) throw std::invalid_argument("deck: Invalid argument 'data' - nullptr is passed");
+		_topIndex = size - 1;
 		int index = 0;
-		for (int i = other.size() - 1; i >= 0; i--) {
-			this->_deck[index] = other._deck[i];
+		for (int i = size - 1; i >= 0; i--) {
+			_deck.push_back(data[index]);
 			index++;
 		}
-		this->_top_index = size() - 1;
+		_deck.shrink_to_fit();
 	}
-}
 
-void deck::shrink_to_fit() {
-	resize(_top_index + 1);
-}
-
-void deck::resize(int new_size) {
-	if (new_size <= 0) throw std::invalid_argument("deck.resize: Invalid argument 'new_size' - must be > 0");
-	if (size() == new_size) return;
-	_deck.resize(new_size);
-	if (new_size < size()) _top_index = new_size - 1;
-	else {	
-		for (int i = size(); i < new_size; i++) _deck.push_back(card("H2B"));
+	deck::deck(std::initializer_list<card> data) {
+		if (data.size() < 1) throw std::invalid_argument("deck: Invalid argument 'data.size()' - must be > 0");
+		_topIndex = static_cast<int>(data.size() - 1);
+		auto it = data.begin();
+		for (int i = _topIndex; i >= 0; i--) {
+			_deck.push_back(*it);
+			it++;
+		}
+		_deck.shrink_to_fit();
 	}
-}
 
-int deck::size() const {
-	return _deck.size();
-}
+	deck::deck(std::initializer_list<const char*> data) {
+		if (data.size() < 1) throw std::invalid_argument("deck: Invalid argument 'data.size()' - must be > 0");
+		_topIndex = static_cast<int>(data.size() - 1);
+		auto it = data.begin();
+		for (int i = _topIndex; i >= 0; i--) {
+			_deck.push_back(card(*it));
+			it++;
+		}
+		_deck.shrink_to_fit();
+	}
 
-int deck::top_index() const {
-	return _top_index;
-}
+	deck::deck(const deck& other) {
+		_topIndex = other._topIndex;
+		_deck = other._deck;
+	}
 
-card& deck::get_top_card() {
-	if (is_empty()) throw std::logic_error("deck.get_top_card: unable to get top card - deck is empty");
-	return _deck[_top_index];
-}
+	deck::deck(const deck& source, int fromIndex, int toIndex) {
+		if (fromIndex < 0 || fromIndex > source.size() - 1) {
+			throw std::invalid_argument("deck: Invalid argument 'fromIndex' - must be >= 0 and < size of source");
+		}
+		if (toIndex < 0 || toIndex > source.size() - 1) {
+			throw std::invalid_argument("deck: Invalid argument 'toIndex' - must be >= 0 and < size of source");
+		}
+		if (fromIndex > toIndex) {
+			throw std::invalid_argument("deck: Invalid argument 'fromIndex' & 'toIndex' - fromIndex cannot be greater than toIndex");
+		}
+		_topIndex = size() - 1;
+		for (int i = fromIndex; i < toIndex + 1; i++) {
+			_deck.push_back(source._deck[i]);
+		}
+		_deck.shrink_to_fit();
+	}
 
-card& deck::get_card(int index) {
-	if (index < 0 || index > size() - 1) throw std::invalid_argument("deck.get_card: Invalid argument 'index' - must be >= 0 and < size of deck");
-	return _deck[index];
-}
+	void deck::shuffle() {
+		vectorShuffle(_deck);
+	}
 
-void deck::operator=(const deck& other) {
-	this->assign(other, Forward);
-}
+	void deck::shuffle(std::mt19937& gen) {
+		vectorShuffle(_deck, gen);
+	}
 
-card& deck::operator[](int index) {
-	return get_card(index);
+	void deck::print() const {
+		for (int i = size() - 1; i >= 0; i--) {
+			_deck[i].print();
+			std::cout << " ";
+		}
+	}
+
+	bool deck::isEmpty() const {
+		if (_topIndex == -1) return true;
+		return false;
+	}
+
+	bool deck::isFull() const {
+		if (_topIndex == size() - 1) return true;
+		return false;
+	}
+
+	bool deck::areAllCardsFaceUp() const {
+		for (int i = 0; i <= _topIndex; i++) {
+			if (_deck[i].state() == CardState::FaceDown) return false;
+		}
+		return true;
+	}
+
+	void deck::append(card card) {
+		if (card.state() == CardState::Blank) {
+			throw std::logic_error("deck.append: unable to append a card - card state is Blank");
+		}
+		if (isFull()) throw std::out_of_range("deck.append: unable to append - deck is full");
+		_topIndex++;
+		_deck[_topIndex] = card;
+	}
+
+	void deck::append(card* cards, int len) {
+		if (_topIndex + len > size() - 1) {
+			throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
+		}
+		for (int i = 1; i < len + 1; i++) {
+			_deck[_topIndex + i] = cards[i - 1];
+		}
+		_topIndex += len;
+	}
+
+	void deck::append(const deck& other) {
+		if (_topIndex + other.size() > size() - 1) {
+			throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
+		}
+		for (int i = 1; i < other.size() + 1; i++) {
+			_deck[_topIndex + i] = other._deck[i - 1];
+		}
+		_topIndex += other.size();
+	}
+
+	void deck::erase() {
+		if (isEmpty()) throw std::logic_error("deck.erase: unable to erase - deck is empty");
+		_deck[_topIndex].setState(CardState::Blank);
+		_topIndex--;
+	}
+
+	void deck::clear() {
+		if (!isEmpty()) {
+			for (int i = _topIndex; i >= 0; i--) {
+				erase();
+			}
+		}
+	}
+
+	void deck::assign(const deck& other, Direction dir) {
+		this->resize(other.size());
+		if (dir == Direction::Forward) {
+			for (int i = 0; i < other.size(); i++) this->_deck[i] = other._deck[i];
+			this->_topIndex = other._topIndex;
+		}
+		else {
+			int index = 0;
+			for (int i = other.size() - 1; i >= 0; i--) {
+				this->_deck[index] = other._deck[i];
+				index++;
+			}
+			this->_topIndex = size() - 1;
+		}
+	}
+
+	void deck::shrinkToFit() {
+		resize(_topIndex + 1);
+	}
+
+	void deck::resize(int newSize) {
+		if (newSize <= 0) throw std::invalid_argument("deck.resize: Invalid argument 'newSize' - must be > 0");
+		if (size() == newSize) return;
+		_deck.resize(newSize);
+		if (newSize < size()) _topIndex = newSize - 1;
+		else {
+			for (int i = size(); i < newSize; i++) {
+				_deck.push_back(card());
+			}
+		}
+	}
+
+	int deck::size() const {
+		return _deck.size();
+	}
+
+	int deck::topIndex() const {
+		return _topIndex;
+	}
+
+	card& deck::getTopCard() {
+		if (isEmpty()) {
+			throw std::logic_error("deck.getTopCard: unable to get top card - deck is empty");
+		}
+		return _deck[_topIndex];
+	}
+
+	card& deck::getCard(int index) {
+		if (index < 0 || index > size() - 1) {
+			throw std::invalid_argument("deck.getCard: Invalid argument 'index' - must be >= 0 and < size of deck");
+		}
+		return _deck[index];
+	}
+
+	const card& deck::getTopCard() const {
+		if (isEmpty()) {
+			throw std::logic_error("deck.getTopCard const: unable to get top card - deck is empty");
+		}
+		return _deck[_topIndex];
+	}
+
+	const card& deck::getCard(int index) const {
+		if (index < 0 || index > size() - 1) {
+			throw std::invalid_argument("deck.getCard const: Invalid argument 'index' - must be >= 0 and < size of deck");
+		}
+		return _deck[index];
+	}
+
+	void deck::operator=(const deck& other) {
+		this->assign(other, Direction::Forward);
+	}
+
+	card& deck::operator[](int index) {
+		return getCard(index);
+	}
+
+	const card& deck::operator[](int index) const {
+		return getCard(index);
+	}
 }

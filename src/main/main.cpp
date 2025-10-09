@@ -4,7 +4,7 @@
 #include "../core/fundamental classes/render/cardRenderer/cardRenderer.h"
 #include "../core/fundamental classes/logic/deck/deck.h"
 #include "../core/fundamental classes/render/deckRenderer/deckRenderer.h"
-#include "../games/solitaire/klondike/cardField/card_field.h"
+#include "../games/solitaire/klondike/klondikeField/klondikeField.h"
 #include "../games/solitaire/klondike/klondike/klondike_console.h"
 
 #include "constants.h"
@@ -21,11 +21,11 @@ int main()
         if (!customCardAtlas.loadFromFile("../../../resources/textures/customizable/card.png")) return -2;
         customCardAtlas.setSmooth(false);
 
-        deck testDeck;
-        deckRenderer testDeckRenderer(defaultCardAtlas, &testDeck, sf::Vector2f(200.f, 200.f), sf::Angle(sf::degrees(90)), 26);
+        WGP::deck testDeck;
+        WGP::deckRenderer testDeckRenderer(defaultCardAtlas, &testDeck, sf::Vector2f(200.f, 200.f), sf::Angle(sf::degrees(90)), 26);
 
 
-        int i = 0;
+        float i = 0;
         sf::Angle testAngle(sf::degrees(i));
         float j = 1;
         bool lever = true;
@@ -57,7 +57,7 @@ int main()
                     }
 
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
-                        testDeck.append(card("SA1"));
+                        testDeck.append(WGP::card("SAU"));
                         testDeckRenderer.update();
                     }
 

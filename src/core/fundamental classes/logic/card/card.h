@@ -1,48 +1,53 @@
+#include "../../TVector/TVector.h"
 #include <iostream>
 #include <windows.h>
 
 #pragma once
 
-enum Rank { R2 = 2, R3, R4, R5, R6, R7, R8, R9, R10, RJ, RQ, RK, RA };
-enum Suit { Clubs, Diamonds, Hearts, Spades };
-enum State { FaceDown, FaceUp, Blank };
+namespace WGP {
+	enum class CardRank { R2 = 2, R3, R4, R5, R6, R7, R8, R9, RT, RJ, RQ, RK, RA };
+	enum class CardSuit { Clubs, Diamonds, Hearts, Spades };
+	enum class CardState { FaceDown, FaceUp, Blank };
 
-class card
-{
-	char _suit;
-	char _rank;
-	char _state;
-public:
-	card();
-	card(char, char, char);
-	card(const char*);
-	card(const card&);
+	class card
+	{
+		CardSuit _suit;
+		CardRank _rank;
+		CardState _state;
+	public:
+		card();
+		card(CardSuit, CardRank, CardState);
+		card(const char*);
+		card(const card&);
 
-	void set_suit(char);
-	void set_rank(char);
-	void set_state(char);
+		void setSuit(CardSuit);
+		void setRank(CardRank);
+		void setState(CardState);
 
-	int suit() const;
-	int rank() const;
-	int state() const;
+		CardSuit suit() const;
+		CardRank rank() const;
+		CardState state() const;
 
-	void set_random_suit();
-	void set_random_rank();
-	void set_random();
+		void setRandomSuit();
+		void setRandomRank();
+		void setRandom();
 
-	void assign(const card&);
-	void print();
-	void flip();
+		void assign(const card&);
+		void print() const;
+		void flip();
 
-	void operator=(const card&);
-	bool operator==(const card&);
-	bool operator!=(const card&);
-	bool operator>(const card&);
-	bool operator<(const card&);
-	bool operator>=(const card&);
-	bool operator<=(const card&);
-};
+		void operator=(const card&);
+		bool operator==(const card&) const;
+		bool operator!=(const card&) const;
+		bool operator>(const card&) const;
+		bool operator<(const card&) const;
+		bool operator>=(const card&) const;
+		bool operator<=(const card&) const;
+	};
 
-bool is_valid_suit(int, int);
-bool is_valid_rank(int, int);
+	bool solitaireIsValidSuit(CardSuit, CardSuit);
+	bool solitaireIsValidRank(CardRank, CardRank);
+}
+
+
 

@@ -7,47 +7,50 @@
 #define OUT_OF_BOUNDS -1000
 
 #pragma once
-class cardRenderer
-{
-	sf::Texture cardPlaceholder;
 
-	sf::Sprite _material;
-	sf::Sprite _frontImage;
-	card* _card;
-	bool _isRendering;
-public:
-	cardRenderer();
-	cardRenderer(sf::Texture&, card*);
-	cardRenderer(sf::Texture&, card*, sf::Vector2f, sf::Angle, sf::Vector2f);
-	cardRenderer(sf::Texture&, card*, float, sf::Angle, sf::Vector2f);
-	cardRenderer(const cardRenderer&);
+namespace WGP {
+	class cardRenderer
+	{
+		sf::Texture cardPlaceholder;
 
-	void setCardAtlas(sf::Texture&);
-	void setCard(card*);
-	void setScale(sf::Vector2f);
-	void setScale(float);
-	void setPosition(sf::Vector2f);
-	void move(sf::Vector2f);
-	void setRotation(sf::Angle);
-	void setOrigin(sf::Vector2f);
-	void setColor(sf::Color);
-	void resetColor();
+		sf::Sprite _material;
+		sf::Sprite _frontImage;
+		card* _card;
+		bool _isRendering;
+	public:
+		cardRenderer();
+		cardRenderer(sf::Texture&, card*);
+		cardRenderer(sf::Texture&, card*, sf::Vector2f, sf::Angle, sf::Vector2f);
+		cardRenderer(sf::Texture&, card*, float, sf::Angle, sf::Vector2f);
+		cardRenderer(const cardRenderer&);
 
-	sf::Vector2f getScale() const;
-	bool isRendering() const;
-	sf::Vector2f getPosition() const;
-	sf::FloatRect getLocalBounds() const;
-	sf::FloatRect getGlobalBounds() const;
-	sf::Angle getRotation() const;
+		void setCardAtlas(sf::Texture&);
+		void setCard(card*);
+		void setScale(sf::Vector2f);
+		void setScale(float);
+		void setPosition(sf::Vector2f);
+		void move(sf::Vector2f);
+		void setRotation(sf::Angle);
+		void setOrigin(sf::Vector2f);
+		void setColor(sf::Color);
+		void resetColor();
 
-	void draw(sf::RenderTarget&);
-	void updateVisual();
-	void assign(const cardRenderer&);
-private:
-	void setOriginToLocalCentre();
-	void setOriginToGlobalCentre();
-};
+		sf::Vector2f getScale() const;
+		bool isRendering() const;
+		sf::Vector2f getPosition() const;
+		sf::FloatRect getLocalBounds() const;
+		sf::FloatRect getGlobalBounds() const;
+		sf::Angle getRotation() const;
 
-sf::IntRect recalculateCordsToIntRect(unsigned, unsigned);
+		void draw(sf::RenderTarget&);
+		void update();
+		void assign(const cardRenderer&);
+	private:
+		void setOriginToLocalCentre();
+		void setOriginToGlobalCentre();
+	};
 
-sf::IntRect recalculateCardToIntRect(card);
+	sf::IntRect cordsToIntRectCardAtlas(unsigned, unsigned);
+
+	sf::IntRect cardToIntRectCardAtlas(card);
+}
