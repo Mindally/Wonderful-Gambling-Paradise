@@ -18,9 +18,9 @@ namespace WGP {
 		float _cardsScale;
 
 		TVector<deckRenderer> _tableauPilesRenders{ 7 }; // 7
-		TVector<cardRenderer> _foundationPilesRenders{ 4 }; // 4
-		cardRenderer _stockPileRender;
-		cardRenderer _wastePileRender;
+		TVector<deckRenderer> _foundationPilesRenders{ 4 }; // 4
+		deckRenderer _stockPileRender;
+		deckRenderer _wastePileRender;
 
 		float _cardsSpacing;
 		float _columnSpacing;
@@ -45,7 +45,6 @@ namespace WGP {
 		void setRendering(bool);
 
 		// Functions
-
 		void draw(sf::RenderTarget&);
 		void update();
 

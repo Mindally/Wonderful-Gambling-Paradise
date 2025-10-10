@@ -1,15 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#define PI 3.14159265358979323846
-
+#include <random>
 #include "../../logic/card/card.h"
 #include "../cardRenderer/cardRenderer.h"
 #include "../../logic/deck/deck.h"
 #include "../../TVector/TVector.h"
 
+
+#define PI 3.14159265358979323846
+#define RANDOM_ROTATION FLT_MIN
+
 #pragma once
 
 namespace WGP {
+
+	enum class DeckStyle {FromPosition, FromAngleSpacing};
+
 	class deckRenderer
 	{
 		sf::Texture* _cardAtlas;
@@ -22,6 +28,7 @@ namespace WGP {
 		sf::Vector2f _startPos, _endPos;
 		float _spacing;
 		bool _isRendering;
+		DeckStyle _deckStyle;
 
 	public:
 		// Constructors
@@ -31,6 +38,8 @@ namespace WGP {
 		deckRenderer(sf::Texture&, deck*, sf::Vector2f, sf::Vector2f);
 
 		// Setters
+		void initializeFromAngle(sf::Texture&, deck*, sf::Vector2f, sf::Angle, float, float, sf::Angle);
+		void initializeFromPosition(sf::Texture&, deck*, sf::Vector2f, sf::Vector2f, float, sf::Angle);
 		void setCardAtlas(sf::Texture&);
 		void setDeck(deck*);
 		void setAngle(sf::Angle);
@@ -39,6 +48,7 @@ namespace WGP {
 		void setPosition(sf::Vector2f, sf::Vector2f);
 		void setSpacing(float);
 		void setRendering(bool);
+		void setDeckStyle(DeckStyle);
 
 		// Visualization functions
 		void draw(sf::RenderTarget&);
@@ -47,6 +57,8 @@ namespace WGP {
 		// Actions with cards
 		void setCardsScale(float);
 		void setCardsRotation(sf::Angle);
+		void setCardsRandomRotation(std::mt19937&, float, float);
+		void setCardsRandomRotation(float, float);
 
 		// Getters
 		sf::Angle getAngle() const;
@@ -54,8 +66,11 @@ namespace WGP {
 		sf::Vector2f getEndPosition() const;
 		float getSpacing() const;
 		bool isRendering() const;
+		DeckStyle getDeckStyle() const;
 		sf::Angle getCardsRotation() const;
 		sf::Vector2f getCardsScale() const;
+	private:
+		float spacingFromLength(int, sf::Vector2f, sf::Vector2f);
 	};
 
 	float calculateAngle(sf::Vector2f, sf::Vector2f);

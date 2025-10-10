@@ -127,7 +127,7 @@ template<class T> TVector<T>::TVector(int size, const T* data) {
 
 template<class T> TVector<T>::TVector(std::initializer_list<T> init) {
     if (init.size() > 0) {
-        _size = init.size();
+        _size = static_cast<int>(init.size());
         _capacity = _size + CAPACITY;
         _data = new T[_capacity];
         _states = new TVectorState[_capacity];

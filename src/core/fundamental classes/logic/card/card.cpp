@@ -129,15 +129,37 @@ namespace WGP {
 	}
 
 	void card::setRandomSuit() {
-		setSuit(static_cast<CardSuit>(rand() % 4));
+		std::mt19937 gen(std::random_device{}());
+		std::uniform_int_distribution<> distrib(0, 3);
+
+		setSuit(static_cast<CardSuit>(distrib(gen)));
 	}
 
 	void card::setRandomRank() {
-		setRank(static_cast<CardRank>(rand() % 13 + 2));
+		std::mt19937 gen(std::random_device{}());
+		std::uniform_int_distribution<> distrib(2, 14);
+
+		setRank(static_cast<CardRank>(distrib(gen)));
 	}
+
 	void card::setRandom() {
 		setRandomSuit();
 		setRandomRank();
+	}
+
+	void card::setRandomSuit(std::mt19937& gen) {
+		std::uniform_int_distribution<> distrib(0, 3);
+		setSuit(static_cast<CardSuit>(distrib(gen)));
+	}
+
+	void card::setRandomRank(std::mt19937& gen) {
+		std::uniform_int_distribution<> distrib(2, 14);
+		setRank(static_cast<CardRank>(distrib(gen)));
+	}
+
+	void card::setRandom(std::mt19937& gen) {
+		setRandomSuit(gen);
+		setRandomRank(gen);
 	}
 
 	void card::assign(const card& other) {

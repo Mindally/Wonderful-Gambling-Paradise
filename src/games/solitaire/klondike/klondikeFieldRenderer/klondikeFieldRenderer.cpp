@@ -60,9 +60,9 @@ namespace WGP {
 			throw std::invalid_argument("klondikeFieldRenderer.setScale: Invalid argument 'scale' - must be > 0");
 		}
 		for (int i = 0; i < 7; i++) _tableauPilesRenders[i].setCardsScale(scale);
-		for (int i = 0; i < 4; i++) _foundationPilesRenders[i].setScale(scale);
-		_stockPileRender.setScale(scale);
-		_wastePileRender.setScale(scale);
+		for (int i = 0; i < 4; i++) _foundationPilesRenders[i].setCardsScale(scale);
+		_stockPileRender.setCardsScale(scale);
+		_wastePileRender.setCardsScale(scale);
 		//update()
 	}
 
@@ -96,8 +96,7 @@ namespace WGP {
 	}
 
 	void klondikeFieldRenderer::setRendering(bool isRendering) {
-		if (_klondikeField == nullptr || _cardAtlas == nullptr) _isRendering = false;
-		else _isRendering = isRendering;
+		_isRendering = isRendering;
 	}
 
 	// Functions

@@ -22,13 +22,14 @@ int main()
         customCardAtlas.setSmooth(false);
 
         WGP::deck testDeck;
-        WGP::deckRenderer testDeckRenderer(defaultCardAtlas, &testDeck, sf::Vector2f(200.f, 200.f), sf::Angle(sf::degrees(90)), 26);
-
+        //WGP::deckRenderer testDeckRenderer(defaultCardAtlas, &testDeck, sf::Vector2f(200.f, 200.f), sf::Angle(sf::degrees(90)), 26);
+        WGP::deckRenderer testDeckRenderer(defaultCardAtlas, &testDeck, sf::Vector2f(200.f, 200.f), sf::Vector2f(800, 200));
 
         float i = 0;
         sf::Angle testAngle(sf::degrees(i));
         float j = 1;
-        bool lever = true;
+        bool lever1 = true;
+        bool lever2 = false;
         float padding = 26;
         while (window.isOpen())
         {
@@ -38,58 +39,85 @@ int main()
                     window.close();
 
                 if (event->is<sf::Event::KeyPressed>()) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) { // Поворот карт по часовой стрелке
                         i++;
                         testAngle = sf::degrees(i * 15);
                         testDeckRenderer.setCardsRotation(testAngle);
                     }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) { // Уменьшение размера
                         j -= 0.04;
                         testDeckRenderer.setCardsScale(j);
                     }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E)) { // Увеличение размера
                         j += 0.04;
                         testDeckRenderer.setCardsScale(j);
                     }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::F)) { // Удаление карты
                         testDeck.erase();
                         testDeckRenderer.update();
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) {
-                        testDeck.append(WGP::card("SAU"));
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H)) { // Добавление карты
+                        WGP::card test("H2U");
+                        test.setRandom();
+                        testDeck.append(test);
                         testDeckRenderer.update();
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::G)) {
-                        if (lever) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::G)) { // Изменение атласа карт
+                        if (lever1) {
                             testDeckRenderer.setCardAtlas(customCardAtlas);
-                            lever = false;
+                            lever1 = false;
                         }
                         else {
                             testDeckRenderer.setCardAtlas(defaultCardAtlas);
-                            lever = true;
+                            lever1 = true;
                         }
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) { // Изменение стиля deckRenderer
+                        if (lever2) {
+                            testDeckRenderer.setDeckStyle(WGP::DeckStyle::FromPosition);
+                            lever2 = false;
+                        }
+                        else {
+                            testDeckRenderer.setDeckStyle(WGP::DeckStyle::FromAngleSpacing);
+                            lever2 = true;
+                        }
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) { // Уменьшение угла размещения карт
                         i--;
                         testDeckRenderer.setAngle(sf::degrees(i * 15));
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) { // Увеличение угла размещения карт
                         i++;
                         testDeckRenderer.setAngle(sf::degrees(i * 15));
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C)) { // Уменьшение spacing
                         padding--;
                         testDeckRenderer.setSpacing(padding);
                     }
 
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V)) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V)) { // Увеличение spacing
                         padding++;
                         testDeckRenderer.setSpacing(padding);
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::O)) {
+                        testDeckRenderer.setCardsRotation(sf::Angle(sf::degrees(0)));
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+                        testDeckRenderer.setCardsRandomRotation(-360.f, 360.f);
+                    }
+
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::L)) {
+                        testDeck.flip();
+                        testDeckRenderer.update();
                     }
                 }
 

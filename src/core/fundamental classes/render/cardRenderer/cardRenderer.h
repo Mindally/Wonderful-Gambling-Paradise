@@ -11,7 +11,7 @@
 namespace WGP {
 	class cardRenderer
 	{
-		sf::Texture cardPlaceholder;
+		sf::Texture _cardPlaceholder;
 
 		sf::Sprite _material;
 		sf::Sprite _frontImage;
@@ -24,6 +24,7 @@ namespace WGP {
 		cardRenderer(sf::Texture&, card*, float, sf::Angle, sf::Vector2f);
 		cardRenderer(const cardRenderer&);
 
+		void initialize(sf::Texture&, card*, float, sf::Vector2f, sf::Angle);
 		void setCardAtlas(sf::Texture&);
 		void setCard(card*);
 		void setScale(sf::Vector2f);
@@ -50,7 +51,7 @@ namespace WGP {
 		void setOriginToGlobalCentre();
 	};
 
-	sf::IntRect cordsToIntRectCardAtlas(unsigned, unsigned);
+	sf::IntRect cordsToIntRectCardAtlas(sf::Vector2u);
 
 	sf::IntRect cardToIntRectCardAtlas(card);
 }

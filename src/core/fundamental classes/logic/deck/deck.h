@@ -23,6 +23,7 @@ namespace  WGP {
 
 		void shuffle();
 		void shuffle(std::mt19937&);
+		void flip();
 		void sort();
 
 		void print() const;

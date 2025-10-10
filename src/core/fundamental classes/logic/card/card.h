@@ -31,6 +31,9 @@ namespace WGP {
 		void setRandomSuit();
 		void setRandomRank();
 		void setRandom();
+		void setRandomSuit(std::mt19937&);
+		void setRandomRank(std::mt19937&);
+		void setRandom(std::mt19937&);
 
 		void assign(const card&);
 		void print() const;

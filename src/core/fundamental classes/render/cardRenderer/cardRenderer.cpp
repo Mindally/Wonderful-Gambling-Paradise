@@ -2,46 +2,55 @@
 
 namespace WGP {
 	cardRenderer::cardRenderer()
-		: _material(cardPlaceholder), _frontImage(cardPlaceholder)
+		: _material(_cardPlaceholder), _frontImage(_cardPlaceholder)
 	{
 		_card = new card;
 		_isRendering = false;
 	}
 
 	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card)
-		: _material(cardPlaceholder), _frontImage(cardPlaceholder)
+		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
+		if (card == nullptr) {
+			throw std::invalid_argument("cardRenderer: Unable to set card - 'card' is nullptr");
+		}
 		_card = card;
 		_isRendering = false;
-		setCardAtlas(cardAtlas);
 		setOriginToLocalCentre();
-		setScale(sf::Vector2f(1, 1));
+		setScale(sf::Vector2f(1.f, 1.f));
 		setPosition(sf::Vector2f(OUT_OF_BOUNDS, OUT_OF_BOUNDS));
 		setRotation(sf::Angle(sf::degrees(0)));
+		update();
 	}
 
 	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card, sf::Vector2f scale, sf::Angle rotation, sf::Vector2f pos)
-		: _material(cardPlaceholder), _frontImage(cardPlaceholder)
+		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
+		if (card == nullptr) {
+			throw std::invalid_argument("cardRenderer: Unable to set card - 'card' is nullptr");
+		}
 		_card = card;
 		_isRendering = _card->state() != CardState::Blank;
-		setCardAtlas(cardAtlas);
 		setOriginToLocalCentre();
 		setScale(scale);
 		setPosition(pos);
 		setRotation(rotation);
+		update();
 	}
 
 	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card, float scale, sf::Angle rotation, sf::Vector2f pos)
-		: _material(cardPlaceholder), _frontImage(cardPlaceholder)
+		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
+		if (card == nullptr) {
+			throw std::invalid_argument("cardRenderer: Unable to set card - 'card' is nullptr");
+		}
 		_card = card;
 		_isRendering = _card->state() != CardState::Blank;
-		setCardAtlas(cardAtlas);
 		setOriginToLocalCentre();
 		setScale(scale);
 		setPosition(pos);
 		setRotation(rotation);
+		update();
 	}
 
 	cardRenderer::cardRenderer(const cardRenderer& other)
@@ -49,21 +58,42 @@ namespace WGP {
 	{
 		_card = other._card;
 		_isRendering = other.isRendering();
-		_material = other._material;
-		_frontImage = other._frontImage;
 		setOriginToLocalCentre();
 		setScale(other.getScale());
 		setPosition(other.getPosition());
 		setRotation(other.getRotation());
 	}
 
+	void cardRenderer::initialize(sf::Texture& cardAtlas, card* card, float scale, sf::Vector2f pos, sf::Angle rotation) {
+		if (card == nullptr) {
+			throw std::invalid_argument("cardRenderer.setCard: Unable to set card - 'card' is nullptr");
+		}
+		_material.setTexture(cardAtlas);
+		_frontImage.setTexture(cardAtlas);
+		_card = card;
+		_material.setScale(sf::Vector2f(scale, scale));
+		_frontImage.setScale(sf::Vector2f(scale, scale));
+		_material.setPosition(pos);
+		_frontImage.setPosition(pos);
+		_material.setRotation(rotation);
+		_frontImage.setRotation(rotation);
+		_isRendering = true;
+
+		update();
+	}
+
 	void cardRenderer::setCardAtlas(sf::Texture& cardAtlas) {
 		_material.setTexture(cardAtlas);
 		_frontImage.setTexture(cardAtlas);
+		update();
 	}
 
 	void cardRenderer::setCard(card* newCard) {
+		if (newCard == nullptr) {
+			throw std::invalid_argument("cardRenderer.setCard: Unable to set card - 'card' is nullptr");
+		}
 		_card = newCard;
+		update();
 	}
 
 	void cardRenderer::setScale(sf::Vector2f scale) {
@@ -72,9 +102,8 @@ namespace WGP {
 	}
 
 	void cardRenderer::setScale(float scale) {
-		sf::Vector2f vecScale(scale, scale);
-		_material.setScale(vecScale);
-		_frontImage.setScale(vecScale);
+		_material.setScale(sf::Vector2f(scale, scale));
+		_frontImage.setScale(sf::Vector2f(scale, scale));
 	}
 
 	void cardRenderer::setPosition(sf::Vector2f pos) {
@@ -134,15 +163,14 @@ namespace WGP {
 
 	void cardRenderer::draw(sf::RenderTarget& target) {
 		if (!_isRendering) return;
-		update();
 		target.draw(_material);
 		target.draw(_frontImage);
 	}
 
 	void cardRenderer::update() {
 		_isRendering = _card->state() != CardState::Blank;
-		if (_card->state() != CardState::FaceDown) _material.setTextureRect(cordsToIntRectCardAtlas(1, 4));
-		else _material.setTextureRect(cordsToIntRectCardAtlas(0, 4));
+		if (_card->state() != CardState::FaceDown) _material.setTextureRect(cordsToIntRectCardAtlas(sf::Vector2u(1, 4)));
+		else _material.setTextureRect(cordsToIntRectCardAtlas(sf::Vector2u(0, 4)));
 
 		_frontImage.setTextureRect(cardToIntRectCardAtlas(*_card));
 		if (_card->state() == CardState::FaceDown) _frontImage.setColor(sf::Color(255, 255, 255, 0));
@@ -177,14 +205,16 @@ namespace WGP {
 
 
 
-	sf::IntRect cordsToIntRectCardAtlas(unsigned indexX, unsigned indexY) {
+	sf::IntRect cordsToIntRectCardAtlas(sf::Vector2u indices) {
 		sf::Vector2i size(CARD_SPRITE_WIDTH, CARD_SPRITE_HEIGHT);
-		int posX = CARD_ATLAS_SPACING + indexX * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
-		int posY = CARD_ATLAS_SPACING + indexY * (CARD_SPRITE_HEIGHT + CARD_ATLAS_SPACING);
-
-		if ((indexX > 12 || indexX < 0) || (indexY > 4 || indexY < 0)) {
+		int posX = 0, posY = 0;
+		if ((indices.x > 12 || indices.x < 0) || (indices.y > 4 || indices.y < 0)) {
 			posX = CARD_ATLAS_SPACING + 2 * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
 			posY = CARD_ATLAS_SPACING + 4 * (CARD_SPRITE_HEIGHT + CARD_ATLAS_SPACING);
+		}
+		else {
+			posX = CARD_ATLAS_SPACING + indices.x * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
+			posY = CARD_ATLAS_SPACING + indices.y * (CARD_SPRITE_HEIGHT + CARD_ATLAS_SPACING);
 		}
 		sf::Vector2i pos(posX, posY);
 		return sf::IntRect(pos, size);

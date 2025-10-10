@@ -49,12 +49,14 @@ namespace WGP {
 			throw std::logic_error("klondikeField.openCardFromStock: Can't open card from stock");
 		}
 		if (!_stockPile.isEmpty()) {
+			_stockPile.getTopCard().setState(CardState::FaceUp);
 			_wastePile.append(_stockPile.getTopCard());
 			_stockPile.erase();
 		}
 		else {
 			_wastePile.shrinkToFit();
 			_stockPile.assign(_wastePile, Direction::Reverse);
+			_stockPile.flip();
 			_wastePile.clear();
 		}
 
@@ -176,7 +178,6 @@ namespace WGP {
 			}
 		}
 		for (int i = 0; i < 24; i++) {
-			deck.getTopCard().setState(CardState::FaceUp);
 			_stockPile.append(deck.getTopCard());
 			deck.erase();
 		}

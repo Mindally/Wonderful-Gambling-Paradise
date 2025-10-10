@@ -86,6 +86,12 @@ namespace WGP {
 		vectorShuffle(_deck, gen);
 	}
 
+	void deck::flip() {
+		for (int i = 0; i <= _topIndex; i++) {
+			_deck[i].flip();
+		}
+	}
+
 	void deck::print() const {
 		for (int i = size() - 1; i >= 0; i--) {
 			_deck[i].print();
