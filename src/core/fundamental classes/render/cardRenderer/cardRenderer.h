@@ -15,18 +15,18 @@ namespace WGP {
 
 		sf::Sprite _material;
 		sf::Sprite _frontImage;
-		card* _card;
+		const card* _card;
 		bool _isRendering;
 	public:
 		cardRenderer();
-		cardRenderer(sf::Texture&, card*);
-		cardRenderer(sf::Texture&, card*, sf::Vector2f, sf::Angle, sf::Vector2f);
-		cardRenderer(sf::Texture&, card*, float, sf::Angle, sf::Vector2f);
+		cardRenderer(sf::Texture&, const card*);
+		cardRenderer(sf::Texture&, const card*, sf::Vector2f, sf::Angle, sf::Vector2f);
+		cardRenderer(sf::Texture&, const card*, float, sf::Angle, sf::Vector2f);
 		cardRenderer(const cardRenderer&);
 
-		void initialize(sf::Texture&, card*, float, sf::Vector2f, sf::Angle);
+		void initialize(sf::Texture&, const card*, float, sf::Vector2f, sf::Angle);
 		void setCardAtlas(sf::Texture&);
-		void setCard(card*);
+		void setCard(const card*);
 		void setScale(sf::Vector2f);
 		void setScale(float);
 		void setPosition(sf::Vector2f);
@@ -50,8 +50,9 @@ namespace WGP {
 		void setOriginToLocalCentre();
 		void setOriginToGlobalCentre();
 	};
-
-	sf::IntRect cordsToIntRectCardAtlas(sf::Vector2u);
-
-	sf::IntRect cardToIntRectCardAtlas(card);
+	
+	sf::Vector2f getLocalCentreOfSprite(sf::Sprite&);
+	sf::Vector2f getGlobalCentreOfSprite(sf::Sprite&);
+	sf::IntRect coordsToIntRectCardAtlas(sf::Vector2u);
+	sf::IntRect cardToIntRectCardAtlas(const card);
 }

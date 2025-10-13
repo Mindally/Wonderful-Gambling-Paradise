@@ -4,11 +4,11 @@ namespace WGP {
 	cardRenderer::cardRenderer()
 		: _material(_cardPlaceholder), _frontImage(_cardPlaceholder)
 	{
-		_card = new card;
+		_card = nullptr;
 		_isRendering = false;
 	}
 
-	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card)
+	cardRenderer::cardRenderer(sf::Texture& cardAtlas, const card* card)
 		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
 		if (card == nullptr) {
@@ -23,7 +23,7 @@ namespace WGP {
 		update();
 	}
 
-	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card, sf::Vector2f scale, sf::Angle rotation, sf::Vector2f pos)
+	cardRenderer::cardRenderer(sf::Texture& cardAtlas, const card* card, sf::Vector2f scale, sf::Angle rotation, sf::Vector2f pos)
 		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
 		if (card == nullptr) {
@@ -38,7 +38,7 @@ namespace WGP {
 		update();
 	}
 
-	cardRenderer::cardRenderer(sf::Texture& cardAtlas, card* card, float scale, sf::Angle rotation, sf::Vector2f pos)
+	cardRenderer::cardRenderer(sf::Texture& cardAtlas, const card* card, float scale, sf::Angle rotation, sf::Vector2f pos)
 		: _material(cardAtlas), _frontImage(cardAtlas)
 	{
 		if (card == nullptr) {
@@ -64,7 +64,7 @@ namespace WGP {
 		setRotation(other.getRotation());
 	}
 
-	void cardRenderer::initialize(sf::Texture& cardAtlas, card* card, float scale, sf::Vector2f pos, sf::Angle rotation) {
+	void cardRenderer::initialize(sf::Texture& cardAtlas, const card* card, float scale, sf::Vector2f pos, sf::Angle rotation) {
 		if (card == nullptr) {
 			throw std::invalid_argument("cardRenderer.setCard: Unable to set card - 'card' is nullptr");
 		}
@@ -88,7 +88,7 @@ namespace WGP {
 		update();
 	}
 
-	void cardRenderer::setCard(card* newCard) {
+	void cardRenderer::setCard(const card* newCard) {
 		if (newCard == nullptr) {
 			throw std::invalid_argument("cardRenderer.setCard: Unable to set card - 'card' is nullptr");
 		}
@@ -169,8 +169,8 @@ namespace WGP {
 
 	void cardRenderer::update() {
 		_isRendering = _card->state() != CardState::Blank;
-		if (_card->state() != CardState::FaceDown) _material.setTextureRect(cordsToIntRectCardAtlas(sf::Vector2u(1, 4)));
-		else _material.setTextureRect(cordsToIntRectCardAtlas(sf::Vector2u(0, 4)));
+		if (_card->state() != CardState::FaceDown) _material.setTextureRect(coordsToIntRectCardAtlas(sf::Vector2u(1, 4)));
+		else _material.setTextureRect(coordsToIntRectCardAtlas(sf::Vector2u(0, 4)));
 
 		_frontImage.setTextureRect(cardToIntRectCardAtlas(*_card));
 		if (_card->state() == CardState::FaceDown) _frontImage.setColor(sf::Color(255, 255, 255, 0));
@@ -190,27 +190,32 @@ namespace WGP {
 	}
 
 	void cardRenderer::setOriginToLocalCentre() {
-		sf::FloatRect bounds = _material.getLocalBounds();
-		float originX = std::round(bounds.size.x / 2.f);
-		float originY = std::round(bounds.size.y / 2.f);
-		setOrigin(sf::Vector2f(originX, originY));
+		setOrigin(getLocalCentreOfSprite(_material));
 	}
 
 	void cardRenderer::setOriginToGlobalCentre() {
-		sf::FloatRect bounds = _material.getGlobalBounds();
-		float originX = std::round(bounds.size.x / 2.f);
-		float originY = std::round(bounds.size.y / 2.f);
-		setOrigin(sf::Vector2f(originX, originY));
+		setOrigin(getGlobalCentreOfSprite(_material));
 	}
 
+	// Supportive functions
 
+	sf::Vector2f getLocalCentreOfSprite(sf::Sprite& sprite) {
+		sf::FloatRect bounds = sprite.getLocalBounds();
+		return sf::Vector2f(bounds.getCenter());
+	}
 
-	sf::IntRect cordsToIntRectCardAtlas(sf::Vector2u indices) {
+	sf::Vector2f getGlobalCentreOfSprite(sf::Sprite& sprite) {
+		sf::FloatRect bounds = sprite.getGlobalBounds();
+		return sf::Vector2f(bounds.getCenter());
+	}
+
+	sf::IntRect coordsToIntRectCardAtlas(sf::Vector2u indices) {
 		sf::Vector2i size(CARD_SPRITE_WIDTH, CARD_SPRITE_HEIGHT);
 		int posX = 0, posY = 0;
 		if ((indices.x > 12 || indices.x < 0) || (indices.y > 4 || indices.y < 0)) {
 			posX = CARD_ATLAS_SPACING + 2 * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
 			posY = CARD_ATLAS_SPACING + 4 * (CARD_SPRITE_HEIGHT + CARD_ATLAS_SPACING);
+			throw std::out_of_range("coordscoordsToIntRectCardAtlas: Invalid argument 'indices' - coords out of range");
 		}
 		else {
 			posX = CARD_ATLAS_SPACING + indices.x * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
@@ -220,7 +225,7 @@ namespace WGP {
 		return sf::IntRect(pos, size);
 	}
 
-	sf::IntRect cardToIntRectCardAtlas(card card) {
+	sf::IntRect cardToIntRectCardAtlas(const card card) {
 		sf::Vector2i size(CARD_SPRITE_WIDTH, CARD_SPRITE_HEIGHT);
 		int posX = CARD_ATLAS_SPACING + (static_cast<int>(card.rank()) - 2) * (CARD_SPRITE_WIDTH + CARD_ATLAS_SPACING);
 		int posY = CARD_ATLAS_SPACING + static_cast<int>(card.suit()) * (CARD_SPRITE_HEIGHT + CARD_ATLAS_SPACING);

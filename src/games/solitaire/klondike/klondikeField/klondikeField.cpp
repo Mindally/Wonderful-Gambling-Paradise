@@ -152,7 +152,7 @@ namespace WGP {
 		{
 			throw std::invalid_argument("klondikeField.getFoundationPile: Invalid argument 'suit' - must be entered correctly");
 		}
-		return _tableauPiles[static_cast<int>(suit)];
+		return _foundationPiles[static_cast<int>(suit)];
 	}
 
 	const deck& klondikeField::getStockPile() const {

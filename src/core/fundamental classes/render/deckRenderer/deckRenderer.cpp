@@ -17,7 +17,7 @@ namespace WGP {
 	{
 	}
 
-	deckRenderer::deckRenderer(sf::Texture& cardAtlas, deck* deck, sf::Vector2f position) :
+	deckRenderer::deckRenderer(sf::Texture& cardAtlas, const deck* deck, sf::Vector2f position) :
 		_cardAtlas(&cardAtlas),
 		_deckRotation(sf::degrees(0)),
 		_deckScale(sf::Vector2f(1.f, 1.f)),
@@ -33,7 +33,7 @@ namespace WGP {
 		update();
 	}
 
-	deckRenderer::deckRenderer(sf::Texture& cardAtlas, deck* deck, sf::Vector2f startPos, sf::Angle angle, float spacing) :
+	deckRenderer::deckRenderer(sf::Texture& cardAtlas, const deck* deck, sf::Vector2f startPos, sf::Angle angle, float spacing) :
 		_cardAtlas(&cardAtlas),
 		_deckRotation(sf::degrees(0)),
 		_deckScale(sf::Vector2f(1.f, 1.f)),
@@ -49,7 +49,7 @@ namespace WGP {
 		update();
 	}
 
-	deckRenderer::deckRenderer(sf::Texture& cardAtlas, deck* deck, sf::Vector2f startPos, sf::Vector2f endPos) :
+	deckRenderer::deckRenderer(sf::Texture& cardAtlas, const deck* deck, sf::Vector2f startPos, sf::Vector2f endPos) :
 		_cardAtlas(&cardAtlas),
 		_deckRotation(sf::degrees(0)),
 		_deckScale(sf::Vector2f(1.f, 1.f)),
@@ -66,7 +66,7 @@ namespace WGP {
 
 	// Setters
 
-	void deckRenderer::initializeFromAngle(sf::Texture& cardAtlas, deck* deck, sf::Vector2f startPos, sf::Angle angle, float spacing, float scale, sf::Angle rotation) {
+	void deckRenderer::initializeFromAngle(sf::Texture& cardAtlas, const deck* deck, sf::Vector2f startPos, sf::Angle angle, float spacing, float scale, sf::Angle rotation) {
 		if (deck == nullptr) {
 			throw std::logic_error("deckRenderer.initializeFromAngle: Unable to set deck - 'deck' is nullptr");
 		}
@@ -88,7 +88,7 @@ namespace WGP {
 		update();
 	}
 
-	void deckRenderer::initializeFromPosition(sf::Texture& cardAtlas, deck* deck, sf::Vector2f startPos, sf::Vector2f endPos, float scale, sf::Angle rotation) {
+	void deckRenderer::initializeFromPosition(sf::Texture& cardAtlas, const deck* deck, sf::Vector2f startPos, sf::Vector2f endPos, float scale, sf::Angle rotation) {
 		if (deck == nullptr) {
 			throw std::logic_error("deckRenderer.initializeFromAngle: Unable to set deck - 'deck' is nullptr");
 		}
@@ -112,7 +112,7 @@ namespace WGP {
 		for (int i = 0; i <= _deck->topIndex(); i++) _cardRenders[i].setCardAtlas(*_cardAtlas);
 	}
 
-	void deckRenderer::setDeck(deck* newDeck) {
+	void deckRenderer::setDeck(const deck* newDeck) {
 		if (newDeck == nullptr) throw std::logic_error("deckRenderer.setDeck: Unable to set deck - 'newDeck' is nullptr");
 		_deck = newDeck;
 		update();

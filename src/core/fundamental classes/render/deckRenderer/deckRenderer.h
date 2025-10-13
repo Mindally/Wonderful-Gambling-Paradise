@@ -22,7 +22,7 @@ namespace WGP {
 		sf::Angle _deckRotation;
 		sf::Vector2f _deckScale;
 
-		deck* _deck;
+		const deck* _deck;
 		TVector<cardRenderer> _cardRenders;
 		sf::Angle _angle;
 		sf::Vector2f _startPos, _endPos;
@@ -33,15 +33,15 @@ namespace WGP {
 	public:
 		// Constructors
 		deckRenderer();
-		deckRenderer(sf::Texture&, deck*, sf::Vector2f);
-		deckRenderer(sf::Texture&, deck*, sf::Vector2f, sf::Angle, float);
-		deckRenderer(sf::Texture&, deck*, sf::Vector2f, sf::Vector2f);
+		deckRenderer(sf::Texture&, const deck*, sf::Vector2f);
+		deckRenderer(sf::Texture&, const deck*, sf::Vector2f, sf::Angle, float);
+		deckRenderer(sf::Texture&, const deck*, sf::Vector2f, sf::Vector2f);
 
 		// Setters
-		void initializeFromAngle(sf::Texture&, deck*, sf::Vector2f, sf::Angle, float, float, sf::Angle);
-		void initializeFromPosition(sf::Texture&, deck*, sf::Vector2f, sf::Vector2f, float, sf::Angle);
+		void initializeFromAngle(sf::Texture&, const deck*, sf::Vector2f, sf::Angle, float, float, sf::Angle);
+		void initializeFromPosition(sf::Texture&, const deck*, sf::Vector2f, sf::Vector2f, float, sf::Angle);
 		void setCardAtlas(sf::Texture&);
-		void setDeck(deck*);
+		void setDeck(const deck*);
 		void setAngle(sf::Angle);
 		void setStartPosition(sf::Vector2f);
 		void setEndPosition(sf::Vector2f);

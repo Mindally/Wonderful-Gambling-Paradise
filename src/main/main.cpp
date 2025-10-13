@@ -5,14 +5,20 @@
 #include "../core/fundamental classes/logic/deck/deck.h"
 #include "../core/fundamental classes/render/deckRenderer/deckRenderer.h"
 #include "../games/solitaire/klondike/klondikeField/klondikeField.h"
+#include "../games/solitaire/klondike/klondikeFieldRenderer/klondikeFieldRenderer.h"
 #include "../games/solitaire/klondike/klondike/klondike_console.h"
 
 #include "constants.h"
+
+//#define DECK_TESTING
+#ifdef DECK_TESTING
+
 
 int main()
 {
     try {
         sf::RenderWindow window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), GAME_TITLE, sf::Style::Titlebar | sf::Style::Close);
+        window.setFramerateLimit(60);
         sf::Texture defaultCardAtlas;
         if (!defaultCardAtlas.loadFromFile("../../../resources/textures/default/card.png")) return -1;
         defaultCardAtlas.setSmooth(false);
@@ -125,6 +131,7 @@ int main()
             window.clear(POKER_GREEN);
             testDeckRenderer.draw(window);
             window.display();
+
         }
 
     }
@@ -134,3 +141,66 @@ int main()
     
     return 0;
 }
+
+#endif // DECK_TESTING
+
+#define GAME_TESTING
+#ifdef GAME_TESTING
+
+void consolePrint(WGP::klondikeField& field) {
+    system("cls");
+    field.print();
+}
+
+int main()
+{
+    try {
+        sf::RenderWindow window(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), GAME_TITLE, sf::Style::Titlebar | sf::Style::Close);
+        window.setFramerateLimit(60);
+        sf::Texture defaultCardAtlas;
+        if (!defaultCardAtlas.loadFromFile("../../../resources/default/textures/card.png")) return -1;
+        defaultCardAtlas.setSmooth(false);
+
+        sf::Texture KlondikeAtlas;
+        if (!KlondikeAtlas.loadFromFile("../../../resources/default/textures/klondike.png")) return -2;
+        KlondikeAtlas.setSmooth(false);
+
+        sf::Font font;
+        if (!font.openFromFile("../../../resources/default/fonts/VCR_OSD_MONO.ttf")) return -3;
+        font.setSmooth(false);
+
+        WGP::klondikeField testField;
+        // sf::Texture& cardAtlas, sf::Texture& klondikeAtlas, klondikeField* field, float scale, float cardsSpacing, float colSpacing, float rowSpacing, sf::Vector2f startPos
+        WGP::klondikeFieldRenderer testFieldRender(defaultCardAtlas, KlondikeAtlas, &testField, font, 1.f, 30.f, 80.f, 120.f, sf::Vector2f(200.f, 200.f));
+
+        while (window.isOpen())
+        {
+            while (const std::optional event = window.pollEvent())
+            {
+                if (event->is<sf::Event::Closed>())
+                    window.close();
+                if (event->is<sf::Event::KeyPressed>()) {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::O)) { // Открыть карту из Stock
+                        testField.openCardFromStock();
+                        testFieldRender.update();
+                        consolePrint(testField);
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) { // Напечатать поле в консоли
+                        consolePrint(testField);
+                    }
+                }
+            }
+            window.clear(POKER_GREEN);
+            testFieldRender.draw(window);
+            window.display();
+        }
+
+    }
+    catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    return 0;
+}
+
+#endif // GAME_TESTING

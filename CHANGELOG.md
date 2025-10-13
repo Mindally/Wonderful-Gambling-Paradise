@@ -29,5 +29,12 @@
 - переделал функции рандома класса card с использованием std::mt19937.
 - Добавил классу deckRenderer стиль колоды (FromPosition, FromAngleSpacing) для корректного изменения характеристик расположения колоды.
 - Добавил метод initialize классу cardRenderer, который инициализирует поля класса из одной функции.
-- Добавил методы initializeFromAngle и initializeFromPosition классу deckRenderer, которые инициализируют поля класса из одной функции.
+- Добавил методы initializeFromAngle и initializeFromPosition классу deckRenderer, которые инициализируют все поля класса из одной функции.
 - Добавил метод spacingFromLength класса deckRenderer.
+
+## [Version: alpha 0.0.4.2] - 13.10.2025
+
+### Изменения
+
+- добавил текст поверх _stockPileRender, который отражает количество карт, которое осталось в _stockPile.
+- добавил много вспомогательных методов.
