@@ -1,14 +1,13 @@
 #include <SFML/Graphics.hpp>
 
-#include "../core/fundamental classes/logic/card/card.h"
-#include "../core/fundamental classes/render/cardRenderer/cardRenderer.h"
-#include "../core/fundamental classes/logic/deck/deck.h"
-#include "../core/fundamental classes/render/deckRenderer/deckRenderer.h"
-#include "../games/solitaire/klondike/klondikeField/klondikeField.h"
-#include "../games/solitaire/klondike/klondikeFieldRenderer/klondikeFieldRenderer.h"
-#include "../games/solitaire/klondike/klondike/klondike_console.h"
+#include "../core/model/card/Card.hpp"
+#include "../core/view/card_renderer/CardRenderer.hpp"
+#include "../core/model/deck/Deck.hpp"
+#include "../core/view/deck_renderer/DeckRenderer.hpp"
+#include "../games/solitaire/klondike/field/Field.hpp"
+#include "../games/solitaire/klondike/field_renderer/FieldRenderer.hpp"
 
-#include "constants.h"
+#include "constants.hpp"
 
 //#define DECK_TESTING
 #ifdef DECK_TESTING
@@ -147,7 +146,7 @@ int main()
 #define GAME_TESTING
 #ifdef GAME_TESTING
 
-void consolePrint(WGP::klondikeField& field) {
+void consolePrint(wgp::klondike::Field& field) {
     system("cls");
     field.print();
 }
@@ -169,9 +168,9 @@ int main()
         if (!font.openFromFile("../../../resources/default/fonts/VCR_OSD_MONO.ttf")) return -3;
         font.setSmooth(false);
 
-        WGP::klondikeField testField;
+        wgp::klondike::Field testField;
         // sf::Texture& cardAtlas, sf::Texture& klondikeAtlas, klondikeField* field, float scale, float cardsSpacing, float colSpacing, float rowSpacing, sf::Vector2f startPos
-        WGP::klondikeFieldRenderer testFieldRender(defaultCardAtlas, KlondikeAtlas, &testField, font, 1.f, 30.f, 80.f, 120.f, sf::Vector2f(200.f, 200.f));
+        wgp::klondike::FieldRenderer testFieldRender(defaultCardAtlas, KlondikeAtlas, &testField, font, 1.f, 24.f, 80.f, 120.f, sf::Vector2f(60.f, 80.f));
 
         while (window.isOpen())
         {
@@ -187,6 +186,7 @@ int main()
                     }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) { // Напечатать поле в консоли
                         consolePrint(testField);
+                        //std::cout << testFieldRender.getEndPosition().x << " " << testFieldRender.getEndPosition().y << std::endl;
                     }
                 }
             }

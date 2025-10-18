@@ -13,12 +13,28 @@ find_package(SFML 3.0 REQUIRED COMPONENTS Graphics Window System)
 
 include(cmake/function.cmake)
 
-add_subdirectory(src/core/fundamental\ classes/logic/card)
-add_subdirectory(src/core/fundamental\ classes/logic/deck)
-add_subdirectory(src/core/fundamental\ classes/render/cardRenderer)
-add_subdirectory(src/core/fundamental\ classes/render/deckRenderer)
-add_subdirectory(src/core/fundamental\ classes/TVector)
-add_subdirectory(src/games/solitaire/klondike/klondikeField)
-add_subdirectory(src/games/solitaire/klondike/klondike)
-add_subdirectory(src/games/solitaire/klondike/klondikeFieldRenderer)
+# Базовые классы логики карты и колоды
+add_subdirectory(src/core/model/card)
+add_subdirectory(src/core/model/deck)
+
+# Базовые классы отображения карты и колоды в SFML
+add_subdirectory(src/core/view/card_renderer)
+add_subdirectory(src/core/view/deck_renderer)
+
+# Сторонние классы
+add_subdirectory(src/core/TVector)
+
+# Классы Пасьянса "Косынка"
+add_subdirectory(src/games/solitaire/card_position)
+add_subdirectory(src/games/solitaire/klondike/field)
+add_subdirectory(src/games/solitaire/klondike/field_renderer)
+add_subdirectory(src/games/solitaire/klondike/game)
+
+# Классы игры "Scoundrel"
+add_subdirectory(src/games/scoundrel/card_position)
+add_subdirectory(src/games/scoundrel/field)
+add_subdirectory(src/games/scoundrel/field_renderer)
+add_subdirectory(src/games/scoundrel/game)
+
+# Main игры
 add_subdirectory(src/main)
