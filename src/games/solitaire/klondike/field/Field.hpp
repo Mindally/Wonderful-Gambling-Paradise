@@ -5,7 +5,9 @@
 #include "../../card_position/CardPosition.hpp"
 #include "../../card_position/CardPositionPresets.hpp"
 #include "../../../../core/TVector/TVector.h"
+
 #include <iostream>
+#include <random>
 
 namespace wgp {
 
@@ -43,7 +45,6 @@ namespace wgp {
 			const Deck& getWastePile() const;
 
 			const Deck& getPile(const solitaire::CardPosition&) const;
-
 			const Card& getCard(const solitaire::CardPosition&) const;
 
 		private:

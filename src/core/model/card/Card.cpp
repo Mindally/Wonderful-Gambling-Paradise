@@ -200,7 +200,7 @@ namespace wgp {
 				std::cout << "C";
 				break;
 			case CardSuit::Spades:
-				SetConsoleColor(9);
+				SetConsoleColor(5);
 				std::cout << "S";
 				break;
 			}

@@ -4,8 +4,13 @@
 #include "../core/view/card_renderer/CardRenderer.hpp"
 #include "../core/model/deck/Deck.hpp"
 #include "../core/view/deck_renderer/DeckRenderer.hpp"
+
 #include "../games/solitaire/klondike/field/Field.hpp"
 #include "../games/solitaire/klondike/field_renderer/FieldRenderer.hpp"
+
+#include "../games/tricky_dungeon/card_position/CardPosition.hpp"
+#include "../games/tricky_dungeon/card_position/CardPositionPresets.hpp"
+#include "../games/tricky_dungeon/field/Field.hpp"
 
 #include "constants.hpp"
 
@@ -143,8 +148,8 @@ int main()
 
 #endif // DECK_TESTING
 
-#define GAME_TESTING
-#ifdef GAME_TESTING
+#define KLONDIKE_TESTING
+#ifdef KLONDIKE_TESTING
 
 void consolePrint(wgp::klondike::Field& field) {
     system("cls");
@@ -203,4 +208,60 @@ int main()
     return 0;
 }
 
-#endif // GAME_TESTING
+#endif // KLONDIKE_TESTING
+
+//#define TRICKY_DUNGEON_TESTING
+#ifdef TRICKY_DUNGEON_TESTING
+
+void consolePrint(wgp::klondike::Field& field) {
+    system("cls");
+    field.print();
+}
+
+int main()
+{
+    try {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        wgp::tricky_dungeon::Field testField(gen);
+        std::string input;
+        while (true) {
+            system("cls");
+            testField.print();
+            std::cout << "Enter command: ";
+            std::cin >> input;
+
+            if (input.empty()) continue;
+
+            int room = -1;
+            if (input.length() > 1 && isdigit(input[1])) {
+                room = input[1] - '0';
+            }
+
+            switch (input[0]) {
+            case 'o': testField.openFromDungeonToRoom(); break;
+            case 's': testField.skipRoom(); break;
+            case 'd': testField.testDiscard(); break; // Для теста
+
+            case 'e': case 'b': case 'f': case 'h':
+                if (room >= 0 && room <= 3) {
+                    auto roomObj = wgp::tricky_dungeon::room(room);
+                    switch (input[0]) {
+                    case 'e': testField.equipWeapon(roomObj); break;
+                    case 'b': testField.fightMonster(roomObj, true); break;
+                    case 'f': testField.fightMonster(roomObj, false); break;
+                    case 'h': testField.useHealingPotion(roomObj); break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    return 0;
+}
+
+#endif // TRICKY_DUNGEON_TESTING

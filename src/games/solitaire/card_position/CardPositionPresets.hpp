@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CardPosition.hpp"
 #include "../../../core/model/card/Card.hpp"
 

@@ -115,7 +115,7 @@ namespace wgp {
 
 		void Field::moveCardFromWasteToCol(const solitaire::CardPosition& destination) {
 			if (destination.getPileType() != solitaire::PileType::Tableau) {
-				throw std::invalid_argument("klondike::Field.moveCardToFoundation: Invalid argument 'destinationPile' - pile type must be Tableau");
+				throw std::invalid_argument("klondike::Field.moveCardToFoundation: Invalid argument 'destination' - pile type must be Tableau");
 			}
 
 			if (!_wastePile.isEmpty()) {
@@ -135,7 +135,7 @@ namespace wgp {
 				throw std::invalid_argument("klondike::Field.returnCardFromFoundationToCol: Invalid argument 'foundationSuit' - must be entered correctly");
 			}
 			if (destination.getPileType() != solitaire::PileType::Tableau) {
-				throw std::invalid_argument("klondike::Field.returnCardFromFoundationToCol: Invalid argument 'destinationPile' - pile type must be Tableau");
+				throw std::invalid_argument("klondike::Field.returnCardFromFoundationToCol: Invalid argument 'destination' - pile type must be Tableau");
 			}
 
 			Deck& foundationPile = getPile(foundation(foundationSuit));
@@ -187,7 +187,7 @@ namespace wgp {
 
 		const Deck& Field::getPile(const solitaire::CardPosition& source) const {
 			if (source.getSolitaireType() != solitaire::SolitaireType::Klondike) {
-				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'pos' - solitaire type must be Klondike");
+				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'source' - solitaire type must be Klondike");
 			}
 
 			switch (source.getPileType()) {
@@ -205,13 +205,13 @@ namespace wgp {
 				return _wastePile;
 
 			default:
-				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'pos' - must be entered correctly");
+				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'source' - must be entered correctly");
 			}
 		}
 
-		const Card& Field::getCard(const solitaire::CardPosition& pos) const {
-			const Deck& pile = getPile(pos);
-			return pile[pos.getCardIndex()];
+		const Card& Field::getCard(const solitaire::CardPosition& source) const {
+			const Deck& pile = getPile(source);
+			return pile[source.getCardIndex()];
 		}
 
 // =============================================
@@ -240,7 +240,7 @@ namespace wgp {
 
 		void Field::moveTableauToFoundation(const solitaire::CardPosition& source, CardSuit foundationSuit) {
 			if (source.getPileType() != solitaire::PileType::Tableau) {
-				throw std::invalid_argument("klondike::Field.moveTableauToFoundation: Invalid argument 'sourcePile' - pile type must be Tableau");
+				throw std::invalid_argument("klondike::Field.moveTableauToFoundation: Invalid argument 'source' - pile type must be Tableau");
 			}
 
 			Deck& foundationPile = getPile(foundation(foundationSuit));
@@ -344,7 +344,7 @@ namespace wgp {
 
 		void Field::openTopCard(const solitaire::CardPosition& source) {
 			if (source.getPileType() != solitaire::PileType::Tableau) {
-				throw std::invalid_argument("klondike::Field.openTopCard: Invalid argument 'sourcePile' - pile type must be Tableau");
+				throw std::invalid_argument("klondike::Field.openTopCard: Invalid argument 'source' - pile type must be Tableau");
 			}
 
 			if (!_tableauPiles[source.getPileIndex()].isEmpty()) {
@@ -368,7 +368,7 @@ namespace wgp {
 
 		Deck& Field::getPile(const solitaire::CardPosition& source) {
 			if (source.getSolitaireType() != solitaire::SolitaireType::Klondike) {
-				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'pos' - solitaire type must be Klondike");
+				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'source' - solitaire type must be Klondike");
 			}
 
 			switch (source.getPileType()) {
@@ -386,7 +386,7 @@ namespace wgp {
 				return _wastePile;
 
 			default:
-				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'pos' - must be entered correctly");
+				throw std::invalid_argument("klondike::Field.getPile: Invalid argument 'source' - pile type must match Klondike");
 			}
 		}
 	}

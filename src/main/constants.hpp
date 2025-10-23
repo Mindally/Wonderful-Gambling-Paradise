@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../core/model/card/Card.hpp"
+
 #define RESOLUTION_MULTIPLIER 80
 #define RESOLUTION_HEIGHT 10
 #define RESOLUTION_WIDTH 15

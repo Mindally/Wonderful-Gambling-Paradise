@@ -1,10 +1,15 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 #include "../../../../core/model/card/Card.hpp"
 #include "../../../../core/model/deck/Deck.hpp"
+
 #include "../field/Field.hpp"
+
 #include "../../../../core/view/card_renderer/CardRenderer.hpp"
 #include "../../../../core/view/deck_renderer/DeckRenderer.hpp"
+
 #include "../../../../core//TVector/TVector.h"
 #include <iostream>
 

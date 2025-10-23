@@ -4,7 +4,7 @@
 
 namespace wgp {
 
-	namespace scoundrel {
+	namespace tricky_dungeon {
 
 		enum class PileType {
 			Empty,

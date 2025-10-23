@@ -30,11 +30,11 @@ add_subdirectory(src/games/solitaire/klondike/field)
 add_subdirectory(src/games/solitaire/klondike/field_renderer)
 add_subdirectory(src/games/solitaire/klondike/game)
 
-# Классы игры "Scoundrel"
-add_subdirectory(src/games/scoundrel/card_position)
-add_subdirectory(src/games/scoundrel/field)
-add_subdirectory(src/games/scoundrel/field_renderer)
-add_subdirectory(src/games/scoundrel/game)
+# Классы игры "Tricky Dungeon"
+add_subdirectory(src/games/tricky_dungeon/card_position)
+add_subdirectory(src/games/tricky_dungeon/field)
+add_subdirectory(src/games/tricky_dungeon/field_renderer)
+add_subdirectory(src/games/tricky_dungeon/game)
 
 # Main игры
 add_subdirectory(src/main)

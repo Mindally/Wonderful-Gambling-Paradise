@@ -9,11 +9,9 @@ namespace wgp {
 	Deck::Deck() :
 		_topIndex(51)
 	{
-		int i = 0;
 		for (int suit = 0; suit < 4; suit++) {
-			for (int rank = static_cast<int>(CardRank::R2); rank <= static_cast<int>(CardRank::RA); rank++) {
+			for (int rank = 2; rank <= 14; rank++) {
 				_deck.push_back(Card(static_cast<CardSuit>(suit), static_cast<CardRank>(rank), CardState::FaceDown));
-				i++;
 			}
 		}
 		_deck.shrink_to_fit();
@@ -114,6 +112,7 @@ namespace wgp {
 	}
 
 	void Deck::print() const {
+		if (isEmpty()) return;
 		for (int i = _topIndex; i >= 1; i--) {
 			_deck[i].print();
 			std::cout << " ";
@@ -141,33 +140,40 @@ namespace wgp {
 // ÌÅÒÎÄÛ ÄÎÁÀÂËÅÍÈß ÈËÈ ÓÄÀËÅÍÈß ÊÀÐÒ
 // =============================================
 
-	void Deck::append(Card& Card) {
-		if (Card.state() == CardState::Blank) {
+	void Deck::append(Card& card) {
+		if (card.state() == CardState::Blank) {
 			throw std::logic_error("deck.append: unable to append a card - card state is Blank");
 		}
 		if (isFull()) throw std::out_of_range("deck.append: unable to append - deck is full");
 		_topIndex++;
-		_deck[_topIndex] = Card;
+		_deck[_topIndex] = card;
 	}
 
 	void Deck::append(Card* cards, int len) {
-		if (_topIndex + len > size() - 1) {
+		for (int i = 0; i < len; i++) {
+			if (cards[i].state() == CardState::Blank) {
+				throw std::logic_error("deck.append: unable to append a card - card state is Blank");
+			}
+		}
+
+		if (_topIndex + len >= size()) {
 			throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
 		}
-		for (int i = 1; i < len + 1; i++) {
-			_deck[_topIndex + i] = cards[i - 1];
+		for (int i = 0; i < len; i++) {
+			_deck[_topIndex + i + 1] = cards[i];
 		}
 		_topIndex += len;
 	}
 
 	void Deck::append(const Deck& other) {
-		if (_topIndex + other.size() > size() - 1) {
+		int nonBlankCardsCount = other._topIndex + 1;
+		if (_topIndex + nonBlankCardsCount > size() - 1) {
 			throw std::out_of_range("deck.append: unable to append - deck size will be out of range");
 		}
-		for (int i = 1; i < other.size() + 1; i++) {
-			_deck[_topIndex + i] = other._deck[i - 1];
+		for (int i = 0; i < nonBlankCardsCount; i++) {
+			_deck[_topIndex + i + 1] = other._deck[i];
 		}
-		_topIndex += other.size();
+		_topIndex += nonBlankCardsCount;
 	}
 
 	void Deck::erase() {
